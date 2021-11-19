@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: runner
+  name: get-pods
   labels:
-    app: runner
+    app: get-pods
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: runner
+      app: get-pods
   template:
     metadata:
       labels:
-        app: runner
+        app: get-pods
     spec:
       containers:
-      - name: runner
-        image: registry1:5000/runner
+      - name: get-pods
+        image: registry1:5000/get-pods
         ports:
         - containerPort: 5000
-          name: runner-web
+          name: get-pods-web
