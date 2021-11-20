@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: get-pods-web
+  name: logger
   labels:
-    app: get-pods
+    app: logger
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
-    - name: get-pods-web
+    - name: logger-web
       protocol: TCP
       port: 5000
+      nodePort: 30000
   selector:
-    app: get-pods
+    app: logger

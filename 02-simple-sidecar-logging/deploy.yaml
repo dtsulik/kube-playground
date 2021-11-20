@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logger
+  labels:
+    app: logger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logger
+  template:
+    metadata:
+      labels:
+        app: logger
+    spec:
+      # TODO filebeats does not support named pipes
+      # initContainers:
+      # - name: create-pipe
+      #   image: ubuntu
+      #   command:
+      #   - mkfifo
+      #   - /logs/log.pipe
+      #   volumeMounts:
+      #   - name: log-dir
+      #     mountPath: /logs
+      containers:
+      - name: log-consumer-sidecar
+        image: docker.elastic.co/beats/filebeat:7.15.2
+        args:
+        - "-e"
+        - "--c"
+        - "/etc/filebeats.yaml"
+        volumeMounts:
+        - name: log-dir
+          mountPath: /logs
+        - name: filebeats-config
+          mountPath: /etc/filebeats.yaml
+          subPath: filebeats.yaml
+          readOnly: true
+      - name: log-output
+        image: registry1:5000/logger
+        env:
+        - name: LOG_DEST
+          value: /logs/log.pipe
+        volumeMounts:
+        - name: log-dir
+          mountPath: /logs
+        ports:
+        - containerPort: 5000
+          name: logger-web
+      volumes:
+        - name: log-dir
+          emptyDir: {}
+        - name: filebeats-config
+          configMap:
+            name: filebeats-config
+            items:
+            - key: filebeats.yaml
+              path: filebeats.yaml

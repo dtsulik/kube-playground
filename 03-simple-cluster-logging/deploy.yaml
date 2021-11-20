@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logger-stdout
+  labels:
+    app: logger-stdout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logger-stdout
+  template:
+    metadata:
+      labels:
+        app: logger-stdout
+    spec:
+      containers:
+      - name: log-output
+        image: registry1:5000/logger
+        ports:
+        - containerPort: 5000
+          name: logger-web

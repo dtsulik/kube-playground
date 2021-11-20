@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeats-config
+data:
+  filebeats.yaml: |
+    filebeat.inputs:
+    - type: filestream
+      paths:
+        - "/logs/log.pipe"
+    setup.kibana:
+      host: "192.168.10.30:5601"
+    output.elasticsearch:
+      hosts: ["192.168.10.30:9200"]
+      index: "kube-sidecar-%{+yyyy.MM.dd}"
+      username: "elastic"
+      password: "G3pzDrZKHQ7Jh9dCtiYJ"
+    setup.template.name: "kube-sidecar"
+    setup.template.pattern: "kube-sidecar-*"
+    setup.ilm.enabled: auto
+    setup.ilm.rollover_alias: "kube-sidecar"
