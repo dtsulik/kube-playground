@@ -20,3 +20,10 @@ spec:
         ports:
         - containerPort: 5000
           name: get-pods-web
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "100Mi"
+          requests:
+            cpu: "50m"
+            memory: "50Mi"
